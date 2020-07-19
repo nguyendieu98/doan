@@ -1,0 +1,8 @@
+"barryvdh/laravel-cors": "^2.0",
+"botman/botman": "^2.5",
+"botman/driver-facebook": "^1.10",
+"botman/driver-web": "^1.5",
+"fideloper/proxy": "^4.0",
+"laravel/framework": "5.7.*",
+"laravel/tinker": "^1.0",
+"laravelcollective/html": "5.7"
