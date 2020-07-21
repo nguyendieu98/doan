@@ -12,7 +12,7 @@
 					<div class="header_top_right_menu pull-right ">
 						<ul>
 							<li><a href="/">Shop</a></li>
-							<li><a href="/contact">Contact Us</a></li> 
+							<li><a href="{{url('contact')}}">Contact Us</a></li> 
 							@auth('client')
 							<li><a href="{{ url('/profile') }}" style="color: white;">{{ Auth::guard('client')->user()->username}}</a></li>
 							<li>

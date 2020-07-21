@@ -240,6 +240,7 @@ class HomeController extends Controller
             return Response($list);
         }
     }
+    // Contact us
     public function contact()
     {
         $abouts = About::take(1)->get(); 
@@ -247,7 +248,14 @@ class HomeController extends Controller
     }
     public function sendContact(Request $request)
     {
-        $email = $request->email; 
+        $request->validate([
+            'name'     => 'required',
+            'email'   => 'required',
+            'message'   => 'required'
+        ]);
+
+        $email = $request->email;
+
         $data = array(
             'name' => $request->name,
             'email' => $request->email,
@@ -256,12 +264,16 @@ class HomeController extends Controller
         Mail::send('user.home.mail',$data, function($message) use ($data){
             //form
             //to
-            $message->to("hungth2301@gmail.com");
+            $message->to("caber9998@gmail.com");
             //subject
-            $message->subject($data['name']);
-        }); 
+            // $message->subject($data['name']);
+            $message->subject("Contact from customer");
+        });
+        Session::flash('message', 'Send message successfully!');
+
         return redirect('/contact');
     }
+    // End Contact us
     public function about()
     {
         $abouts = About::take(1)->get(); 

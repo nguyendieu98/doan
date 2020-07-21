@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::orderBy('created_at', 'desc')->where('isdelete',false)->get();
         return view('admin.user.index',compact('users'));
     }
 
@@ -111,13 +111,14 @@ class UserController extends Controller
     public function destroy(Request $request)
     { 
         $user = User::findOrFail($request->id);
-        $user->delete($request->id);
-        $user->role()->detach();
+        // $user->role()->detach();
         if ($user){
-            return redirect('/admin/user')->with('message','Delete successfully!');
+            $user->isdelete = true;
+            $user->update();
         }else{
             return back()->with('err','Delete error!');
         }
+        return redirect('/admin/user')->with('message','Delete successfully!');
     }
 
     // Change Password

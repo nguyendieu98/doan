@@ -42,8 +42,10 @@ Route::group(array('namespace'=>'User'),function(){
 	Route::get('/changepassword', 'ClientController@showChangePassForm');
 	Route::post('/changepassword','ClientController@changePassword')->name('changepassword');
 	// End Change Password route
+	// Contact
 	Route::get('/contact','HomeController@contact'); 
-	Route::post('/sendcontact','HomeController@sendContact');
+	Route::post('/contact','HomeController@sendContact')->name('sendcontact');
+	// End Contact
 	Route::get('/about','HomeController@about');
 	Route::get('/order/{id}','ClientController@orderdetail');   
 	Route::post('/comment','ClientController@comment');
