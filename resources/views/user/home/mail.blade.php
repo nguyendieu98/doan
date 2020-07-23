@@ -1,7 +1,13 @@
-<div class="contact_mail">
-	<p>Dear Admin, </p>
-	<p>My name is: {{$name}} </p>
-	<p>Email: {{$email}} </p>
-	<p>Content: {{$content}}</p>
-	<p>Thanks !</p>
-</div>
+<table>
+	<tbody>
+		<tr>
+			<td style="font-size: 18px; color: #74787e;">
+				<p>Hello</p>
+				<p>My name is: <span style="color: #202124;">{{$name}}</span> </p>
+				<p>Email: <span style="color: #202124;">{{$email}}</span> </p>
+				<p>Content: <span style="color: #202124;">{{$content}}</span></p>
+				<p>Thanks !</p>
+			</td>
+		</tr>
+	</tbody>
+</table>

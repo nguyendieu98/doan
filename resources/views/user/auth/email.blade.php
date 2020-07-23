@@ -14,11 +14,17 @@
                         {{ session('status') }}
                     </div>
                 @endif
+                @if (session('err'))
+                    <div class="alert alert-danger" role="alert">
+                        {{ session('err') }}
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('password.email') }}">
                     @csrf
                     <div class="form-group">
                         <label for="email" class="control-label">E-Mail Address</label>
-                        <input id="email" type="email" class="form-control" name="email" required autocomplete="email" autofocus>
+                        <input id="email" type="email" class="form-control" name="email">
+                        <strong class="text-danger">{{ $errors->first('email')}}</strong>
                     </div>
 
                     <div class="form-group row mb-0">
