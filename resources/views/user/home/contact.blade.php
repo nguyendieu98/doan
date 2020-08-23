@@ -1,5 +1,5 @@
 @extends('user.layout.main')
-@section('title','Contact')
+@section('title',__('client.Contact'))
 @section('content') 
 <!--BREADCRUMB AREA START -->
 <div class="breadcrumb_area">
@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12">	
 				<div class="breadcrumb-row">
-					<h3 class="breadcrumb"><a href="/" class="home">Home</a><span>/</span>Contact</h3>
+					<h3 class="breadcrumb"><a href="/" class="home">{{__('client.Home')}}</a><span>/</span>{{__('client.Contact')}}</h3>
 				</div>
 			</div>
 		</div>
@@ -21,14 +21,14 @@
 			<!-- contact-info start -->
 			<div class="col-md-6 col-sm-12 col-xs-12 left-con">
 				<div class="contact-info">
-					<h3>Contact info</h3>
+					<h3>{{__('client.contactinfo')}}</h3>
 					<ul>
 						<li>
-							<i class="fa fa-map-marker"></i> <strong>Address:</strong>
+							<i class="fa fa-map-marker"></i> <strong>{{__('profileUser.add')}} :</strong>
 							{{$abouts[0]->address}}
 						</li>
 						<li>
-							<i class="fa fa-mobile"></i> <strong>Phone:</strong>
+							<i class="fa fa-mobile"></i> <strong>{{__('profileUser.phone')}} :</strong>
 							{{$abouts[0]->phone}}
 						</li>
 						<li>
@@ -41,7 +41,7 @@
 			<!-- contact-info end -->
 			<div class="col-md-6 col-sm-12 col-xs-12">
 				<div class="contact-form">
-					<h3>Leave a Message</h3>
+					<h3>{{__('client.LEAVEAMESSAGE')}}</h3>
 					<div class="row">
 						@if (Session::has('message'))
 							<p class="alert alert-success notification">{{ Session::get('message')}}</p>
@@ -50,15 +50,15 @@
 							@csrf
 							<div class="col-md-6 col-sm-6 col-xs-12">
 								<input name="name" type="text" placeholder="Name (required)" />
-								<span class="text-danger">{{ $errors->first('name')}}</span>
+								<strong class="text-danger">{{ $errors->first('name')}}</strong>
 							</div>
 							<div class="col-md-6 col-sm-6 col-xs-12">
 								<input name="email" type="email" placeholder="Email (required)" />
-								<span class="text-danger">{{ $errors->first('email')}}</span>
+								<strong class="text-danger">{{ $errors->first('email')}}</strong>
 							</div> 
 							<div class="col-md-12 col-sm-12 col-xs-12">
 								<textarea name="message" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-								<span class="text-danger">{{ $errors->first('message')}}</span>
+								<strong class="text-danger">{{ $errors->first('message')}}</strong>
 								
 							</div>
 							<div class="col-md-12 col-sm-12 col-xs-12">

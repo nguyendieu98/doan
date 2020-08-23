@@ -1,0 +1,32 @@
+<?php 
+return[   
+      'profile'=>'Profile',
+      'firstname'=>'First Name',
+    	'lastname'=>'Last Name',
+    	'add'=>'Address',
+    	'phone'=>'Phone Number',
+    	'edit'=>'Edit Profile',
+    	'editpass'=>'Change PassWord',
+    	'allorder'=>'All Order',
+  		'uncomf'=>'Uncomfimred',
+      'comfim'=>'Confimred',
+  		'delivery'=>'Delivery',
+  		'delivered'=>'Delivered',
+      'Cancelthisorder'=>'Cancel this order!',
+  		'cancel'=>'Cancel',
+      'yes'=>'Yes! Cancel',
+      'no'=>'No! Close',
+  		'detail'=>'Detail',
+  		'totalamount'=>'Total Amount',
+      'Editpass'=>'Edit Password Successfully!',
+      'Editprofile'=>'Edit Profile Successfully!',
+      'order'=>'ORDER',
+      'orderDetail'=>'ORDER DETAIL',
+      'feedback'=>'Feedback',
+      'comment'=>'Comment',
+      'vote'=>'Vote',
+      'starerr'=>'Please rating star!',
+      'cmterr' =>'Please comment!', 
+];
+
+

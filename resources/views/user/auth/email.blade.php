@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="reset_pass_form">
             <div class="card-header">
-                <h2>Reset Password</h2>
+                <h2>{{__('log.resetpw')}}</h2>
             </div>
             <div class="line_green"></div>
             <div class="card-body">
@@ -22,14 +22,14 @@
                 <form method="POST" action="{{ route('password.email') }}">
                     @csrf
                     <div class="form-group">
-                        <label for="email" class="control-label">E-Mail Address</label>
+                        <label for="email" class="control-label">E-Mail</label>
                         <input id="email" type="email" class="form-control" name="email">
                         <strong class="text-danger">{{ $errors->first('email')}}</strong>
                     </div>
 
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
-                            <button type="submit" class="btn btn-success">Send Password Reset Link</button>
+                            <button type="submit" class="btn btn-success">{{__('log.sendpw')}}</button>
                         </div>
                     </div>
                 </form>

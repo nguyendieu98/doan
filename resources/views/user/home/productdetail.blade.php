@@ -17,7 +17,7 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12">	
 				<div class="breadcrumb-row">
-					<h3 class="breadcrumb"><a href="/" class="home">Home</a> <span>/</span> <a href="{{url('products')}}">Products</a> <span>/</span>{{$product->name}}</h3>
+					<h3 class="breadcrumb"><a href="/" class="home">{{__('client.Home')}}</a> <span>/</span> <a href="{{url('products')}}">{{__('client.Product')}}</a> <span>/</span>{{$product->name}}</h3>
 				</div>
 			</div>
 		</div>
@@ -37,7 +37,7 @@
 				<div class="product_left_left_sidebar">
 					<div class="right_sidebar_menu">
 						<div class="right_menu_title">
-							<h2 class="widgettitle"> <i class="fa fa-bars"></i> <span>CATEGORIES</span>  </h2>
+							<h2 class="widgettitle"> <i class="fa fa-bars"></i> <span>{{__('client.category')}}</span>  </h2>
 						</div>
 						<div class="r_menu" style="overflow-x: auto; height: 450px;">
 							<ul>
@@ -49,7 +49,7 @@
 					</div>
 					<div class="info_widget">
 						<div class="section_title">
-							<h2 class="" style="float: left;">Top Rated Products</h2>
+							<h2 class="" style="float: left;">{{__('client.TopRatedProducts')}}</h2>
 						</div>
 						<div style="clear: both;"></div>
 						@foreach($list_product_votes as $key => $list_product_vote)
@@ -67,7 +67,7 @@
 									@endif
 									@endfor
 								</div>
-								<span class="price"><span class="amount">{{$list_product_vote[0]['price']}}đ</span></span>
+								<span class="price"><span class="amount">{{number_format($list_product_vote[0]['price'])}}đ</span></span>
 							</div>
 						</div>
 						@endif
@@ -76,19 +76,14 @@
 					<div class="info_widget">
 						<div class="small_slider">
 							<!-- single_slide -->
+							@foreach($banners as $key => $banner)
 							<div class="single_slide">
-								<img src="{{asset('client/img/slider/8.jpg')}}" alt="" />
+								<img src="{{asset('images/'.$banner->url_img)}}" alt=""  />
 								<div class="s_slider_text">
 									<h2>MEET <br />THE <br />MARKET</h2>
 								</div>
 							</div> 
-							<!-- single_slide -->
-							<div class="single_slide">
-								<img src="{{asset('client/img/slider/7.jpg')}}" alt="" />
-								<div class="s_slider_text another">
-									<h2>AWESOME <br />BANNER</h2>
-								</div>
-							</div> 
+							@endforeach 
 						</div>
 					</div> 
 				</div>
@@ -149,14 +144,19 @@
 									@endif
 									@endfor
 								</div>
-								<span class="price"><span class="amount">{{$product->price}}đ</span></span>
+								@if($product->promotion)
+								<span class="price"><span class="amount">{{number_format($product->price - $product->price*$product->promotion/100)}}đ</span></span>
+								<strike><span class="h4" style="margin-left: 10px;"> {{number_format($product->price)}}đ</span></strike>
+								@else
+								<span class="price"><span class="amount">{{number_format($product->price)}}đ</span></span>
+								@endif  
 								<br><br>
 							</div>
 							<div class="sort_section">
 								<form action="{{ url('add-to-cart/'.$product->id) }}" onsubmit="return checkform();">
 									<!-- size -->
 									<ul class="sort-bar">
-										<li class="sort-bar-text">Size: </li>
+										<li class="sort-bar-text">{{__('client.size')}}</li>
 										<li></li>
 										<li  class="customform" >
 											<?php
@@ -171,7 +171,7 @@
 											<div class="select-wrapper">
 												<select name="size" class="orderby" id="size">
 													<option value="" selected="selected">
-													Select size!</option>
+													{{__('client.selectsize')}}</option>
 													@foreach($list as $key => $size)
 													<option value="{{$size}}">{{$size}}</option>
 													@endforeach
@@ -181,35 +181,35 @@
 									</ul>
 									<!-- color -->
 									<ul class="sort-bar">
-										<li class="sort-bar-text">Color: </li>
+										<li class="sort-bar-text">{{__('client.color')}}</li>
 										<li></li>
 										<li  class="customform" >
 											<div class="select-wrapper">
 												<select name="color" class="orderby" id="color">
-													<option value="">Selcet color!</option>
+													<option value="">{{__('client.selectcolor')}}</option>
 												</select>
 											</div>
 										</li>
 									</ul> 
 									<!-- quantity -->
 									<ul class="sort-bar">
-										<li class="sort-bar-text">Quantity: </li>
+										<li class="sort-bar-text">{{__('client.quantity')}}</li>
 										<li></li>
 										<li class="customform" >
 											<button type="button" class="btn" onclick="document.getElementById('quantity').stepDown();" style="float: left;">-</button>
 											<input type="number" name="quantity" min="1" max="100" value="1" class="text-center"  id="quantity">
 											<button type="button" class="btn" onclick="document.getElementById('quantity').stepUp();">+</button>
-											<span style="margin-left: 10px;">  Products available: <span id="quantityava" class="text-danger">{{ $quantity }}</span></span>
+											<span style="margin-left: 10px;">{{__('client.Productsavailable')}} :<span id="quantityava" class="text-danger">{{ $quantity }}</span></span>
 											<input type="hidden" id="quantitystore" value="{{ $quantity }}">
 										</li>
 									</ul>
 									<p class="checkerr text-danger"></p>
-									<button type="submit" class="btn btn-success"><i class="fas fa-cart-plus" style="font-size: 20px;"></i> <b>ADD TO CART</b></button>
+									<button type="submit" class="btn btn-success"><i class="fas fa-cart-plus" style="font-size: 20px;"></i> <b>{{__('client.addtocart')}}</b></button>
 								</form>	
 							</div>
 							<div class="product_meta">
-								<span class="sku_wrapper">Brand: {{$product->brand->name}}</span>
-								<span class="posted_in">Category: <a rel="tag" href="{{route('products.index')}}?category={{$product->category->name}}">{{$product->category->name}}</a></span>
+								<span class="sku_wrapper">{{__('client.brand')}}: {{$product->brand->name}}</span>
+								<span class="posted_in">{{__('client.category')}} : <a rel="tag" href="{{route('products.index')}}?category={{$product->category->name}}">{{$product->category->name}}</a></span>
 							</div>
 						</div>
 					</div>
@@ -217,8 +217,8 @@
 					<div class="tab_collection_area product_tab ">
 						<div id="tab-container" class='tab-container'>
 							<ul class='etabs '>
-								<li class='tab'><a href="#description">Description</a></li>
-								<li class='tab'><a href="#reviews">Comments ({{count($comments)}})</a></li> 
+								<li class='tab'><a href="#description">{{__('client.Description')}}</a></li>
+								<li class='tab'><a href="#reviews">{{__('client.comments')}} {{count($comments)}})</a></li> 
 							</ul>
 							<div class='panel-container'>
 								<!-- first_collection -->
@@ -258,7 +258,7 @@
 				<!-- RELATED  PRODUCS  -->
 				<div class="featured_producs related_product ">
 					<div class="section_title">
-						<h2>Related Products</h2>
+						<h2>{{__('client.RelatedProducts')}} </h2>
 					</div>
 					<div class = 'slider8'> 
 						@foreach($productbycategories as $key => $productbycategory)
@@ -267,14 +267,14 @@
 							<div class = 'item' >
 								<a href="{{route('products.show',$productbycategory->slug)}}">
 									<div class="product_img">
-										<img src="{{asset('images/'.$productbycategory->image)}}" alt="" style="height: 200px;" />
+										<img src="{{asset('images/'.$productbycategory->image)}}" class="imghome" />
 									</div>
 									<div class="addtocart_area">
 										<a href="{{route('products.show',$productbycategory->slug)}}">
 											<div class="cart-icons">
 												<strong><span class="fa fa-shopping-cart"></span></strong>
 												<span class="cart-icon-handle"></span>
-												<span class="add-to-cart-text">ADD TO CART</span>
+												<span class="add-to-cart-text">{{__('client.addtocart')}}</span>
 											</div>
 										</a>
 									</div>
@@ -284,10 +284,10 @@
 							<div class="info ">
 								<p class="name" style="height: 40px;"><a href="{{route('products.show',$productbycategory->slug)}}" title="{{$productbycategory->name}}">{{str_limit($productbycategory->name, 34)}}</a></p> 
 								@if($productbycategory->promotion)
-								<del><span class="amount nrb">{{ $productbycategory->price }}đ</span></del>
-								<span class="price"><span class="amount">{{ $productbycategory->price - intval(($productbycategory->price * $productbycategory->promotion)/100) }}đ</span></span>
+								<del><span class="amount nrb">{{ number_format($productbycategory->price) }}đ</span></del>
+								<span class="price"><span class="amount">{{number_format($productbycategory->price - intval(($productbycategory->price * $productbycategory->promotion)/100)) }}đ</span></span>
 								@else
-								<span class="price"><span class="amount">{{ $productbycategory->price }}đ</span></span>
+								<span class="price"><span class="amount">{{ number_format($productbycategory->price) }}đ</span></span>
 								@endif 
 							</div>
 							@if($productbycategory->promotion)
@@ -323,12 +323,14 @@
 		var quantitystore = $('#quantitystore').val();
 		var quantity = $('#quantity').val(); 
 		if (!size || !color) {
-			$('.checkerr').html('Please select Size and Color!');
+			$('.checkerr').html('{{trans('client.PleaseselectSizeandColor')}}')
 			result = false;
 		}else{ 
 			if (parseInt(quantity) > parseInt(quantitystore)) { 
 				result = false;
-				$('.checkerr').html('Quantity must be less than '+quantitystore+'!');
+				$('.checkerr').html('{{trans('client.quantity1')}}'+quantitystore+'!');
+
+
 			}
 		}
 		return result;

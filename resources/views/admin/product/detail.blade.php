@@ -18,7 +18,7 @@
 			<img src="{{ asset('images/'.$image) }}" width="150" height="100"></img>
 			@endforeach
 		</p>
-		<p><b>Price : </b>{{$product->price}}</p>
+		<p><b>Price : </b>{{number_format($product->price)}}đ</p>
 		<p><b>Quantity : </b></p>
 		<p><b>Promotion : </b>{{$product->promotion}}%</p>
 		<p><b>Brand : </b>{{$product->brand->name}}</p>

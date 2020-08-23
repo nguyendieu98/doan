@@ -32,6 +32,7 @@
 					<th >Product</th>
 					<th >Size</th>
 					<th >Color</th>
+					<th >Price</th>
 					<th colspan="5">Action</th>
 				</tr>
 			</thead>
@@ -43,6 +44,7 @@
 						<td>{{$product_detail->product->name}}</td> 
 						<td>{{$product_detail->size}}</td>
 						<td>{{$product_detail->color}}</td>
+						<td>{{number_format($product_detail->product->price)}}đ</td>
 						<td colspan="5">
 							<!-- Button trigger modal -->
 							<!-- Tạo data-id để chưa giá trị id -->

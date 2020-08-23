@@ -28,34 +28,32 @@ Route::group(array('namespace'=>'Auth'),function(){
 // -------------------------------------------------------------------------------
 Route::group(array('namespace'=>'User'),function(){
 	//View client
+	Route::get('lang/{lang}','LangController@changeLang')->name('lang');
 	Route::get('/','HomeController@homepage');
+	Route::get('/product_sale','HomeController@product_sale');
 	Route::post('/checkout','CartController@checkout');
 	Route::post('/placeorder','CartController@placeorder');
 	Route::resource('products','HomeController');
 	Route::resource('cart','CartController');
-	Route::resource('/profile','ClientController');
-	// Edit Profile
-	Route::get('/profile/{profile}/editprofile', 'ClientController@edit')->name('profile.editprofile');
-	Route::post('/profile/{profile}','ClientController@update')->name('profile.updateprofile');
-	// End Edit Profile
-	// Change Password route
-	Route::get('/changepassword', 'ClientController@showChangePassForm');
-	Route::post('/changepassword','ClientController@changePassword')->name('changepassword');
-	// End Change Password route
-	// Contact
-	Route::get('/contact','HomeController@contact'); 
-	Route::post('/contact','HomeController@sendContact')->name('sendcontact');
-	// End Contact
+	Route::resource('/profile','ClientController');   
 	Route::get('/about','HomeController@about');
 	Route::get('/order/{id}','ClientController@orderdetail');   
 	Route::post('/comment','ClientController@comment');
 	Route::post('/received','ClientController@received');
+	Route::post('/cancelorder','ClientController@cancelOrder');
 	//End view client
 	// CART
 	Route::patch('update-cart', 'CartController@update');
 	Route::get('add-to-cart/{id}', 'CartController@addToCart');
 	Route::delete('remove-from-cart', 'CartController@remove');
 	// END CART
+	// Change Password route
+	Route::get('/changepassword', 'ClientController@showChangePassForm');
+	Route::post('/changepassword','ClientController@changePassword')->name('changepassword');
+	// Contact
+	Route::get('/contact','HomeController@contact'); 
+	Route::post('/contact','HomeController@sendContact')->name('sendcontact');
+	// End Contact
 }); 
 // -------------------------------------------------------------------------------
 // END USER
@@ -82,6 +80,7 @@ Route::group(array('namespace'=>'Admin','middleware'=>'auth:admin'),function(){
 	Route::post('/save_image', 'ProductController@saveImage');
 	Route::post('/delete_image', 'ProductController@deleteImage');
 	Route::post('/get_order_detail', 'OrderController@getOrderDetail');
+	Route::post('/edit_comment', 'CommentController@editComment');
 }); 
 Route::get('/get_color_in_productdetail', 'User\HomeController@getListColor');
 Route::get('/get_quantity_in_productdetail', 'User\HomeController@getQuantity');
@@ -267,6 +266,11 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'),function(){
 		'uses' => 'ProductController@destroy',
 		'middleware' => 'checkpermission:product_delete'
 	]); 
+	Route::get('/product_sale',[
+		'as' => 'product_sale',
+		'uses' => 'ProductController@sale',
+		'middleware' => 'checkpermission:product_list'
+	]);
 	//End Product---------------------------------------------------------------------------------------------- 
 	//Start ProductDetail--------------------------------------------------------------------------------------
 	Route::get('/productdetail',[
@@ -332,6 +336,39 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'),function(){
 		'middleware' => 'checkpermission:slide_delete'
 	]); 
 	//End Slide------------------------------------------------------------------------------------------------
+	//Start Banner---------------------------------------------------------------------------------------------
+	Route::get('banner',[
+		'as' => 'banner.index',
+		'uses' => 'BannerController@index',
+		'middleware' => 'checkpermission:slide_list'
+	]);
+	Route::get('/banner/create',[
+		'as' => 'banner.create',
+		'uses' => 'BannerController@create',
+		'middleware' => 'checkpermission:banner_create'
+	]);
+	Route::post('banner',[
+		'as' => 'banner.store',
+		'uses' => 'BannerController@store',
+		'middleware' => 'checkpermission:banner_create'
+	]);
+	Route::get('/banner/{banner}/edit',[
+		'as' => 'banner.edit',
+		'uses' => 'BannerController@edit',
+		'middleware' => 'checkpermission:banner_edit'
+	]);
+	Route::put('banner/{banner}',[
+		'as' => 'banner.update',
+		'uses' => 'BannerController@update',
+		'middleware' => 'checkpermission:bannere_edit'
+	]);
+	Route::delete('banner_delete_modal',[
+		'as' => 'banner_delete_modal',
+		'uses' => 'BannerController@destroy',
+		'middleware' => 'checkpermission:banner_delete'
+	]); 
+	//End Banner-----------------------------------------------------------------------------------------------
+
 	//Start Stote----------------------------------------------------------------------------------------------
 	Route::get('/store',[
 		'as' => 'store.index',
@@ -428,10 +465,27 @@ Route::group(array('prefix'=>'admin','namespace'=>'Admin'),function(){
 		'middleware' => 'checkpermission:role_delete'
 	]); 
 	//End Role-------------------------------------------------------------------------------------------------
+	//Start Statistical----------------------------------------------------------------------------------------
+	Route::get('/report/byorder',[ 
+		'uses' => 'ReportController@byOrder',
+		'middleware' => 'checkpermission:report'
+	]);
+	Route::get('/report/byproduct',[ 
+		'uses' => 'ReportController@byProduct',
+		'middleware' => 'checkpermission:report'
+	]);
+	Route::get('/report/byrevenue',[ 
+		'uses' => 'ReportController@index',
+		'middleware' => 'checkpermission:report'
+	]);
+	//End Statistical------------------------------------------------------------------------------------------
 	Route::get('/home', 'HomeController@index')->name('admin.home');
-	// Admin Change Password
+	Route::get('/report/chart','ReportController@chartTotalmonth');
+	Route::get('/report/chart_by_year','ReportController@chartTotalYear');
+	//Admin Change Password------------------------------------------------------------------------------------------
 	Route::get('/changepassword', 'UserController@showAdminChangePassForm');
 	Route::post('/changepassword', 'UserController@changeAdminPassword')->name('admin.changepass');
+	//End Admin Change Password------------------------------------------------------------------------------------------
 });
 // -------------------------------------------------------------------------------
 // END ADMIN

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -26,25 +27,36 @@ class CategoryRequest extends FormRequest
     {
         if ($this->method()=='PUT') {
             return [
-                'name'=>'required|max:255|unique:categories,name,'.$request->get('id'),
+                'name'=>[
+                    'required',
+                    'max:255',
+                    Rule::unique('categories')->where(function ($query) use($request) {
+                        $query->where('isdelete', 0)->where('id','<>',$request->get('id'));
+                    }),
+                ], 
                 'description' => 'required|max:500'
             ];
         }else{
             return [
-                'name' => 'required|max:255',
-                'name'=>'required|unique:categories,name,'.$this->id,
+                'name'=> [
+                    'required',
+                    'max:255',
+                    Rule::unique('categories')->where(function ($query) {
+                        $query->where('isdelete', 0);
+                    }),
+                ],
                 'description' => 'required|max:500'
             ]; 
         }
     }
     public function messages()
     {
-        return [
-            'name.required'=>'Please enter a category name.',
-            'name.unique' => 'Category name already exists.',
-            'name.max'=>'Maximum length is 100 characters.',
-            'description.required'=>'Please enter a description.',
-            'description.max'=>'Maximum length is 500 characters.'
+        return [ 
+            'name.required'=>'Category name must not be blank!',
+            'name.unique' => 'Category Name already exists!',
+            'name.max'=>'Category name maximum length is 255 characters!',
+            'description.required'=>'Description must not be blank!',
+            'description.max'=>'Description maximum length is 500 characters!'
         ];
     }
 }

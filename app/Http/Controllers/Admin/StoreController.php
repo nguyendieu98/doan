@@ -9,6 +9,7 @@ use App\Models\Store;
 use App\Models\Product_Detail;
 use App\Http\Requests\StoreRequest;
 use Carbon\Carbon;
+use Auth;
 
 class StoreController extends Controller
 {
@@ -73,6 +74,7 @@ class StoreController extends Controller
                 'quantity' => $request->quantity,
                 'isdelete' => false,
                 'isdisplay' => false,
+                'created_by' => Auth::guard('admin')->user()->id,
                 'updated_at' => null
             ]);
             $store->save();

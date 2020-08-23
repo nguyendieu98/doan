@@ -9,8 +9,8 @@ use App\Models\Role;
 use App\Models\Role_user;
 use Carbon\Carbon;
 use DB;
-use Auth;
 use Hash;
+use Auth;
 
 class UserController extends Controller
 {
@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('created_at', 'desc')->where('isdelete',false)->get();
+        $users = User::orderBy('created_at', 'desc')->where('isdelete', false)->get();
         return view('admin.user.index',compact('users'));
     }
 
@@ -111,10 +111,9 @@ class UserController extends Controller
     public function destroy(Request $request)
     { 
         $user = User::findOrFail($request->id);
-        // $user->role()->detach();
         if ($user){
-            $user->isdelete = true;
-            $user->update();
+            $user->delete();
+            $user->role()->detach();
         }else{
             return back()->with('err','Delete error!');
         }

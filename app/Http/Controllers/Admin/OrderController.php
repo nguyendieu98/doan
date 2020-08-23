@@ -25,9 +25,21 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::orderBy('created_at', 'desc')->get();
+        $orders = Order::orderBy('created_at', 'desc');
+        if ($request->status) {
+            $orders = $orders->where('status',$request->status);
+        }
+        if ($request->from) {
+            $from = date("Y-m-d", strtotime($request->from));
+            $orders = $orders->where('transaction_date','>=',$from);
+        }
+        if ($request->to) { 
+            $to = date("Y-m-d", strtotime($request->to));
+            $orders = $orders->where('transaction_date','<=',$to);
+        }
+        $orders = $orders->paginate(10)->appends(request()->query());
         return view('admin.order.index',compact('orders'));
     }
 
@@ -54,8 +66,12 @@ class OrderController extends Controller
         $total_amount = 0;
         foreach ($request->product_detail_id as $key => $value) {
             $product_id = Product_Detail::select('product_id')->where('id',$value)->first();
-            $price = Product::select('price')->where('id',$product_id->product_id)->first();
-            $total_amount += $price->price * $request->quantity[$key] ; 
+            $product = Product::select('price','promotion')->where('id',$product_id->product_id)->first();
+            $price = $product->price;
+            if ($product->promotion) {
+                $price = $product->price - ($product->price * $product->promotion)/100;
+            }
+            $total_amount += $price * $request->quantity[$key] ;
         }
         $order = new Order([
             'order_code' => $request->product_code,
@@ -71,11 +87,15 @@ class OrderController extends Controller
         $order->save();
         foreach ($request->product_detail_id as $key => $value) {
             $product_id = Product_Detail::select('product_id')->where('id',$value)->first();
-            $price = Product::select('price')->where('id',$product_id->product_id)->first();
+            $product = Product::select('price','promotion')->where('id',$product_id->product_id)->first(); 
+            $price = $product->price;
+            if ($product->promotion) {
+                $price = $product->price - ($product->price * $product->promotion)/100;
+            }
             $order_detail = new Order_detail([
                 'quantity' => $request->quantity[$key],
-                'price' => $price->price,
-                'total_amount' => $request->quantity[$key] * $price->price,
+                'price' => $price,
+                'total_amount' => $request->quantity[$key] * $price,
                 'order_id' => $order->id,
                 'product_detail_id' => $value,
                 'isfeedback' => false,
@@ -84,6 +104,7 @@ class OrderController extends Controller
             ]);
             $order_detail->save();
         }
+        $this->updateStore($order->id);
         if ($order){
             return redirect('/admin/order')->with('message','Create New successfully!');
         }else{
@@ -111,6 +132,9 @@ class OrderController extends Controller
     public function edit($id)
     {
         $order = Order::findOrFail($id);
+        if ($order->status == 'cancel' || $order->status == 'delivered') {
+            return redirect('/admin/order');
+        }
         return view('admin.order.edit',compact('order'));
     }
 
@@ -125,11 +149,14 @@ class OrderController extends Controller
     {
         $order= Order::findOrfail($id);
         if (isset($order))
-        {
+        { 
             $order->status = $request->status;
             $order->updated_at = Carbon::now()->toDateTimeString() ;
             $order->updated_by = Auth::guard('admin')->user()->id;
             $order->update();
+            if ($order->status == 'cancel') {
+                $this->updateStore($order->id);
+            } 
         }else{
             return back()->with('err','Save error!');
         }
@@ -171,5 +198,14 @@ class OrderController extends Controller
             $product_details[] = Product_Detail::select('product_details.size','product_details.color')->join('order_details','order_details.product_detail_id','=','product_details.id')->where('order_details.product_detail_id',$value->product_detail_id)->first(); 
         }
         return response()->json(array('success'=> true, 'names' => $name,'order_details'=> $order_details, 'product_details' => $product_details, 'users'=> $user,'orders'=>$order)); 
+    }
+    public function updateStore($order_id)
+    {
+        $orderdetail_id = Order_detail::select('product_detail_id','quantity')->where('order_id',$order_id)->get(); 
+        foreach ($orderdetail_id as $key => $value) {
+            $store = Store::where('productdetail_id',$value->product_detail_id)->first(); 
+            $store->quantity -= $value->quantity;
+            $store->update();  
+        }
     }
 }

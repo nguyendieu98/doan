@@ -30,7 +30,7 @@ class StoreRequest extends FormRequest
     public function messages()
     {
         return [
-            'quantity.required' => 'Please enter quantity.',
+            'quantity.required' =>'Quantity code must not be blank!',
         ];
     }
 }

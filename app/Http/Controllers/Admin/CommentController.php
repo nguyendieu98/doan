@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -20,7 +21,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::orderBy('created_at', 'desc')->where('isdelete',false)->get();
+        return view('admin.comment.index',compact('comments'));
     }
 
     /**
@@ -87,5 +89,16 @@ class CommentController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function editComment(Request $request)
+    {
+        $comment = Comment::findOrFail($request->id);
+        if ($comment->isdisplay) {
+            $comment->isdisplay = false;    
+        }else{
+            $comment->isdisplay = true;
+        } 
+        $comment->update();
+        return Response(1);
     }
 }

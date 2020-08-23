@@ -7,30 +7,32 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
 				<div class="header_top">
 					<div class="header_top_left pull-left ">
-						<p id="title">Default welcome msg!</p>
+						<!-- <p id="title">Default welcome msg!</p> -->
 					</div>
 					<div class="header_top_right_menu pull-right ">
 						<ul>
-							<li><a href="/">Shop</a></li>
-							<li><a href="{{url('contact')}}">Contact Us</a></li> 
+						<li><a href="/">{{ __('validation.shop') }}</a></li>
+						<li><a href="/contact">{{ __('validation.contact') }}</a></li> 
 							@auth('client')
-							<li><a href="{{ url('/profile') }}" style="color: white;">{{ Auth::guard('client')->user()->username}}</a></li>
+							<li><a href="{{ url('/profile') }}" style="color: white;">{{ strtoupper(Auth::guard('client')->user()->username)}}</a></li>
 							<li>
 								<a class="dropdown-item" href="{{ url('/') }}"
 								onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-								{{ __('Logout') }}
+								{{ __('client.loguot') }}
 							</a>
 							<form id="logout-form" action="{{ url('/logout') }}" method="GET" style="display: none;">
 								@csrf
 							</form>
 						</li>
 						@else
-						<li><a href="{{ url('/login') }}">Login</a></li>
-						<li><a href="{{ url('/register') }}">Register</a></li>
+						<li><a href="{{ url('/login') }}">{{ __('validation.Login') }}</a></li>
+						<li><a href="{{ url('/register') }}">{{ __('validation.Register') }}</a></li>
 						@endauth
 					</ul>
+
 				</div>
-			</div>
+				<a href="{{ url('lang',['lang' => 'vi']) }}">VI</a>
+				<a href="{{ url('lang',['lang' => 'en' ]) }}">EN</a>
 		</div>				
 	</div>
 </div>
@@ -42,14 +44,14 @@
 <div class="header_area">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-lg-3 col-md-3 col-sm-3">
+			<div class="col-lg-3 col-md-3 col-sm-3 ">
 				<div class="phone_area">
 					<p><i class="fa fa-phone"></i> 
-						<b>Call Us </b><span id="phone">(+80) 123 456 789 </span>
+						<b>{{ __('client.call') }} : </b><span id="phone">(+80) 123 456 789 </span>
 					</p>
 				</div>		
 			</div>
-			<div class="col-xs-12 col-lg-3 col-md-3 col-sm-2">
+			<div class="col-lg-3 col-md-3 col-sm-2 ">
 				<div class="logo">
 					<!--MOBILE MENU TRIGER-->
 					<div class="mobilemenu_icone">
@@ -59,17 +61,17 @@
 					<a href="/"><img src="{{asset('client/img/logo.png')}}" alt="" id="logo" style="width: 70%; height: 40px; margin-bottom: 5px;" /></a>
 				</div>			
 			</div>
-			<div class="col-xs-12 col-lg-3 col-md-3 col-sm-3">	
+			<div class="col-lg-3 col-md-3 col-sm-3" >	
 				<form action="/products" method="GET">	 
 					<div class="search">
-						<input type="text" placeholder="Search…" name="productname" style="border: 1px solid #ddd; width: 100%; height: 38px; padding-left: 10px;"/>
+						<input type="text" placeholder="{{ __('client.search') }}" name="productname" style="border: 1px solid #ddd; width: 100%; height: 38px; padding-left: 10px;"/>
 						<button type="submit" style="height: 34px; margin-right: 1px;">
 							<i class="fa fa-search"></i>
 						</button>
 					</div> 
 				</form>			
 			</div>
-			<div class="col-xs-12 col-lg-3 col-md-3 col-sm-4">
+			<div class="col-lg-3 col-md-3 col-sm-4 ">
 				<div class="cart-wishlist">
 					<ul>
 						<li>
@@ -111,19 +113,19 @@
 	<nav>
 		<ul>
 			<li>
-				<a href="{{url('/')}}">HOME</a>
+				<a href="{{url('/')}}">{{ __('client.Home') }}</a>
 			</li>
 			<li>
-				<a href="{{url('products')}}">Products</i></a>
+				<a href="{{url('products')}}">{{ __('client.Product') }}</i></a>
 			</li>
 			<li>
-				<a href="{{url('about')}}">About</a>
+				<a href="{{url('about')}}">{{ __('client.About') }}</a>
 			</li>
 			<li>
-				<a href="{{url('contact')}}">Contact</a>
+				<a href="{{url('contact')}}">{{ __('client.Contact') }}</a>
 			</li>
 			<li>
-				<a href="{{route('products.index')}}?sale=sale">Sale</a>
+				<a href="{{url('product_sale')}}">{{ __('client.Sale') }}</a>
 			</li>
 		</ul>						
 	</nav>
@@ -139,19 +141,19 @@
 					<nav>
 						<ul id="nav">
 							<li>
-								<a href="{{url('/')}}">HOME </a>
+								<a href="{{url('/')}}">{{ __('client.Home') }} </a>
 							</li>
 							<li>
-								<a href="{{url('products')}}">Products</a>
+								<a href="{{url('products')}}">{{ __('client.Product') }}</a>
 							</li>
 							<li>
-								<a href="{{url('about')}}">About</a>
+								<a href="{{url('about')}}">{{ __('client.About') }}</a>
 							</li>
 							<li>
-								<a href="{{url('contact')}}">Contact</a>
+								<a href="{{url('contact')}}">{{ __('client.Contact') }}</a>
 							</li>
 							<li >
-								<a href="{{route('products.index')}}?sale=sale">Sale</a>
+								<a href="{{url('product_sale')}}">{{ __('client.Sale') }}</a>
 							</li>
 						</ul>						
 					</nav>
@@ -161,4 +163,5 @@
 		</div>
 	</div>
 </div>
+
 <!--MAIN MENU AREA  END-->

@@ -56,7 +56,7 @@
 						<span class="text-danger">{{ $errors->first('price')}}</span>
 					</div>
 					<div class="col-md-6">
-						{{ Form::label('promotion','Promotion : ')}}
+						{{ Form::label('promotion','Promotion(%) : ')}}
 						{{ Form::number('promotion',$product->promotion,['class'=>'form-control','min'=>'0', 'max'=>'99'])}}
 						<span class="text-danger">{{ $errors->first('promotion')}}</span>
 					</div> 

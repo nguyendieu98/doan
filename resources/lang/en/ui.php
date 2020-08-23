@@ -1,0 +1,21 @@
+<?php 
+return[ 
+  'customblock'=>'Custom Block',
+  'aboutus'=>'About Us',
+  'privacypolicy'=>'Privacy Policy',
+  'terms'=>'Terms & Condition',
+  'bestseller'=>'Best Seller',
+  'manufactures'=>'Manufactures',
+  'deliveryinfomation'=>'Delivery Infomation',
+  'privacypolicy'=>'Privacy Policy',
+  'seacrh'=>'Search & Terms',
+  'order'=>'Order & Return',
+  'infomation'=>'Infomation',
+  'open'=>'OPENNING TIME',
+  'monday'=>'Monday - Friday',
+  'saturday'=>'Sturday',
+  'sunday'=>'Sunday',
+  'phone'=>'Phone',
+  'PleaseselectSizeandColor'=>'Please select Size and Color!',
+  'quantity'=>'Quantity must be less than',
+];

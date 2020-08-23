@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\Client;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
@@ -55,24 +54,11 @@ class RegisterController extends Controller
     }
 
     // validator
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|size:10',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|min:8|same:confirm_password',
-            'confirm_password' => 'required',
-        ]);
-    }
 
     // Admin ko co register de tam day test thu
-    protected function createAdmin(Request $request)
+    protected function createAdmin(RegisterRequest $request)
     {
-        $this->validator($request->all())->validate(); 
+        $request->validated();
         $admin = User::create([
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -91,9 +77,9 @@ class RegisterController extends Controller
     }
 
     // Register Client
-    protected function createClient(Request $request)
+    protected function createClient(RegisterRequest $request)
     {
-        $this->validator($request->all())->validate();
+        $request->validated();
         $writer = User::create([
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],

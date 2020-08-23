@@ -31,7 +31,7 @@
 						<td>{{$order_detail->product_detail->size}}</td> 
 						<td>{{$order_detail->product_detail->color}}</td> 
 						<td>{{$order_detail->quantity}}</td>
-						<td>{{$order_detail->price}}</td>
+						<td>{{number_format($order_detail->price)}}đ</td>
 					</tr>
 					@endforeach
 				</tr>

@@ -7,7 +7,7 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12">	
 				<div class="breadcrumb-row">
-					<h3 class="breadcrumb"><a href="/" class="home">Home</a><span>/</span><a href="/cart" class="home">Shopping Cart</a><span>/</span>Checkout</h3>
+					<h3 class="breadcrumb"><a href="/" class="home">Home</a><span>/</span><a href="/cart" class="home">{{__('cart.ShoppingCart')}}</a><span>/</span>{{__('cart.checkuot')}}</h3>
 				</div>
 			</div>
 		</div>
@@ -23,16 +23,16 @@
 					<a href="{{ url('cart') }}">
 						<div class="title-cart">
 							<span>1</span>
-							<p>Shopping Cart</p>
+							<p>{{__('cart.ShoppingCart')}}</p>
 						</div>
 					</a>
 					<div class="title-checkout title-cart">
 						<span>2</span>
-						<p>Checkout details</p>
+						<p>{{__('cart.Checkoutdetails')}}</p>
 					</div>
 					<div class="title-thankyou">
 						<span>3</span>
-						<p>Order Complete</p>
+						<p>{{__('cart.OrderComplete')}}</p>
 					</div>
 				</div>
 				<form method="POST" action="{{ url('/placeorder') }}" onsubmit="return validate();" id="placeform">
@@ -40,15 +40,15 @@
 					<div class="row"> 
 						<div class="col-lg-6 col-md-6 col-sm-6">
 							<div class="Your_order">
-								<h2>Your order</h2>
+								<h2>{{__('cart.yourorder')}}</h2>
 							</div>
 							<div class="col-lg-12 col-md-12 col-sm-12" style="margin-top: 30px; margin-bottom: 20px;">
 								<div class="last-order">
 									<table id="order_review" class="shop_table">
 										<thead>
 											<tr>
-												<th class="product-name">Product</th>
-												<th class="product-total">Total</th>
+												<th class="product-name">{{__('cart.product')}}</th>
+												<th class="product-total">{{__('cart.total')}}</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -62,7 +62,7 @@
 													<strong class="product-quantity">× {{ $product['quantity'] }}</strong>
 												</td>
 												<td class="product-total">
-													<span class="amount">{{ $product['quantity'] * $product['price'] }}đ</span>
+													<span class="amount">{{ number_format($product['quantity'] * $product['price']) }}đ</span>
 												</td> 
 											</tr>
 											<input type="hidden" value="{{ $product['price'] }}" name="price[]">
@@ -72,16 +72,16 @@
 										<tfoot>
 											<tr class="cart-subtotal">
 												<th>Cart Subtotal</th>
-												<td><span class="amount">{{ $total }}đ</span></td>
+												<td><span class="amount">{{ number_format($total) }}đ</span></td>
 											</tr>
 											<tr class="shipping">
-												<th>Shipping</th>
-												<td>Free Shipping</td>
+												<th>{{__('cart.Shipping')}}</th>
+												<td>{{__('cart.ship')}}</td>
 											</tr>
 											<tr class="order-total">
-												<th>Order Total</th>
+												<th>{{__('cart.total')}}</th>
 												<td>
-													<strong><span class="amount">{{ $total }}đ</span></strong>
+													<strong><span class="amount">{{ number_format($total) }}đ</span></strong>
 													<input type="hidden" value="{{ $total }}" name="total_amount">
 												</td>
 											</tr>
@@ -92,7 +92,7 @@
 							</div>
 							<div class="col-lg-12 col-md-12 col-sm-12">
 								<div class="Your_order">
-									<h2>Payment</h2>
+									<h2>{{__('cart.payment')}}</h2>
 								</div>
 								<input type="radio" name="payment" value="cod" id="cod" checked>
 								<label for="cod">Ship CoD</label>
@@ -106,7 +106,7 @@
 												<p> 
 													<input type="radio" name="payment" id="transfer" value="vnpay"> 
 													<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" id="online" style="font-weight: 700;color:#666666; text-decoration: none;"> 
-														Direct Bank Transfer: VNPAY 
+														{{__('cart.VNPAY')}}
 													</a> 
 												</p>
 											</div>
@@ -114,7 +114,7 @@
 												<div class="panel-body">
 													<div class="col-lg-12 col-md-12 col-sm-12">    
 														<div class="form-group">
-															<label for="bank_code">Ngân hàng</label>
+															<label for="bank_code">{{__('cart.bank')}}</label>
 															<select name="bank_code" id="bank_code" class="form-control"> 
 																<!-- <option value="VNPAYQR">VNPAYQR</option> -->
 																<option value="NCB"> Ngan hang NCB</option>
@@ -146,64 +146,55 @@
 						</div>
 						<div class="col-lg-6 col-md-6 col-sm-6">
 							<div class="Billing_Details_area">
-								<h2>Billing Details</h2>
+								<h2>{{__('cart.billingdetails')}}</h2>
 								<div class="beling_info">
 									<div class="row">
 										<div class="col-lg-6 col-md-6 col-sm-6">
 											<div class="bell_ditl_s">
 												<div class="level">
-													First Name <span class="required" title="required">*</span>
+													{{__('profileUser.firstname')}}<span class="required" title="required">*</span>
 												</div>
-												<input type="text" placeholder="First Name" value="{{ Auth::guard('client')->user()->first_name}}" name="first_name" id="first_name" />
+												<input type="text" placeholder="{{__('profileUser.firstname')}}" value="{{ Auth::guard('client')->user()->first_name}}" name="first_name" id="first_name" />
 												<span id="first_nameerr" class="text-danger"></span>
 											</div>
 										</div>
 										<div class="col-lg-6 col-md-6 col-sm-6"> 
 											<div class="bell_ditl_s">
 												<div class="level">
-													Last Name <span class="required" title="required">*</span>
+													{{__('profileUser.lastname')}}<span class="required" title="required">*</span>
 												</div>
-												<input type="text" placeholder="Last Name" value="{{ Auth::guard('client')->user()->last_name}}" name="last_name" id="last_name" />
+												<input type="text" placeholder="{{__('profileUser.lastname')}}" value="{{ Auth::guard('client')->user()->last_name}}" name="last_name" id="last_name" />
 												<span id="last_nameerr" class="text-danger"></span>
 											</div>
 										</div>
 										<div class="col-lg-12 col-md-12 col-sm-12">
 											<div class="bell_ditl_s">
 												<div class="level">
-													Address <span class="required" title="required">*</span>
+													{{__('profileUser.add')}} <span class="required" title="required">*</span>
 												</div>
-												<input type="text" placeholder="Street, City" value="{{ Auth::guard('client')->user()->address}}" name="address" id="address" />
+												<input type="text" placeholder="{{__('profileUser.add')}}" value="{{ Auth::guard('client')->user()->address}}" name="address" id="address" />
 												<span id="addresserr" class="text-danger"></span>
 											</div>
 										</div>
-										<div class="col-lg-6 col-md-6 col-sm-6">
+										<div class="col-lg-12 col-md-12 col-sm-12">
 											<div class="bell_ditl_s">
 												<div class="level">
-													Email Address <span class="required" title="required" >(Street, City)*</span>
+													{{__('profileUser.phone')}}<span class="required" title="required">*</span>
 												</div>
-												<input type="text" placeholder="Email" value="{{ Auth::guard('client')->user()->email}}" name="email" id="emailuser" />
-												<span id="emailerr" class="text-danger"></span>
-											</div>
-										</div>
-										<div class="col-lg-6 col-md-6 col-sm-6">
-											<div class="bell_ditl_s">
-												<div class="level">
-													Phone <span class="required" title="required">*</span>
-												</div>
-												<input type="text" placeholder="Phone number" value="{{ Auth::guard('client')->user()->phone}}" name="phone" id="phonenumber" />
+												<input type="text" placeholder="{{__('profileUser.phone')}}" value="{{ Auth::guard('client')->user()->phone}}" name="phone" id="phonenumber" />
 												<span id="phoneerr" class="text-danger"></span>
 											</div>
 										</div>
 										<div class="col-lg-12 col-md-12 col-sm-12">
 											<div class="bell_ditl_s hhf">
 												<div class="level">
-													Order Notes
+													{{__('cart.OrderNotes')}}*
 												</div>												
-												<textarea name="notes"  placeholder="Notes about your order." style="min-height: 150px;"></textarea>
+												<textarea name="notes"  placeholder="{{__('cart.Notes')}}" style="min-height: 150px;"></textarea>
 											</div>
 										</div>
 									</div> 
-									<input type="submit" value="Place order" class="buttons" style="margin-top: 30px;" />
+									<input type="submit" value="{{__('cart.Placeorder')}}" class="buttons" style="margin-top: 30px;" />
 								</div>
 							</div>
 						</div>
@@ -229,46 +220,35 @@
 		var first_name = $("#first_name").val();
 		var last_name = $("#last_name").val();
 		var address = $("#address").val();
-		var email = $("#emailuser").val();
 		var phone = $("#phonenumber").val();	
 		var result = true;
 		if (!first_name) {
 			result = false;
-			$('#first_nameerr').html("Please enter First Name.");
+			$('#first_nameerr').html('{{trans('regis.first_name')}}')
 		}else{
 			$('#first_nameerr').html("");
 		}
 		if (!last_name) {
 			result = false;
-			$('#last_nameerr').html("Please enter Last Name.");
+			$('#last_nameerr').html('{{trans('regis.last_name')}}')
 		}else{
 			$('#last_nameerr').html("");
 		}
 		if (!address) {
 			result = false;
-			$('#addresserr').html("Please enter Address.");
+			$('#addresserr').html('{{trans('regis.add')}}')
 		}else{
 			$('#addresserr').html("");
-		}
-		if (!email) {
-			result = false;
-			$('#emailerr').html("Please enter Email.");
-		}else{
-			$('#emailerr').html("");
-			if (!validateEmail(email)) {
-				result = false;
-				$('#emailerr').html("Email is is not valid.");
-			}
-		}
+		} 
 		if (!phone) {
 			result = false;
-			$('#phoneerr').html("Please enter Phone.");
+			$('#phoneerr').html('{{trans('regis.phone')}}')
 		}else{
 			$('#phoneerr').html("");
 			var phoneno = /^\d{10}$/;
 			if(!phone.match(phoneno)){
 				result = false;
-				$('#phoneerr').html("Phone is is not valid.");
+				$('#phoneerr').html('{{trans('regis.phonerr')}}')
 			}
 		}
 		return result;

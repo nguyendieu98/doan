@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Models\About;
 use App\Models\Product;
+use App\Http\Requests\LoginRequest;
 use Auth;
 use Session;
 
@@ -63,8 +64,8 @@ class LoginController extends Controller
 
             return redirect()->intended('/admin/home');
         }
-        Session::flash('err','Username or Password incorrect!');
-        return back()->withInput($request->only('username', 'remember'))->with('err','Username or Password incorrect!');
+        Session::flash('err',trans('log.passerr'));
+        return back()->withInput($request->only('username', 'remember'))->with('err',trans('log.passerr'));
     }
 
     public function showClientLoginForm()
@@ -76,13 +77,9 @@ class LoginController extends Controller
         return view('user.auth.login', ['url' => 'client'],compact('abouts'));
     }
 
-    public function clientLogin(Request $request)
+    public function clientLogin(LoginRequest $request)
     {
-        $this->validate($request, [
-            'username'   => 'required',
-            'password' => 'required'
-        ]);
-
+       $request->validated();
         if (Auth::guard('client')->attempt(['username' => $request->username, 'password' => $request->password, 'level' => 2, 'isdelete' => false], $request->get('remember'))) {   
             //Kiem tra url truoc do co phai POST add-to-cart k?
             $start = strpos($request->session()->get('url.intended'),'add-to-cart');
@@ -91,12 +88,12 @@ class LoginController extends Controller
                 $end = strpos($request->session()->get('url.intended'),'?');
                 $id = substr($request->session()->get('url.intended'), $start+12,$end-$start-12);
                 $product = Product::findOrfail($id);
-                return redirect('products/'.$product->name);
+                return redirect('products/'.$product->slug);
             } 
             return redirect()->intended('/');
         }
         Session::flash('err','Username or Password incorrect!');
-        return back()->withInput($request->only('username', 'remember'))->with('err','Username or Password incorrect!');
+        return back()->withInput($request->only('username', 'remember'))->with('err',trans('log.passerr'));
     }
 
     // Dang xuat Admin

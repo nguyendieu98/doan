@@ -8,7 +8,7 @@
         </div>
         <div id="navbar-menu">
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
                         <i class="lnr lnr-alarm"></i>
                         <span class="badge bg-danger">5</span>
@@ -21,13 +21,11 @@
                         <li><a href="#" class="notification-item"><span class="dot bg-success"></span>Your request has been approved</a></li>
                         <li><a href="#" class="more">See all notifications</a></li>
                     </ul>
-                </li>
+                </li> -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{asset('assets/img/apple-icon.png')}}" class="img-circle" alt="Avatar"> <span>{{ Auth::guard('admin')->user()->username}}</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
                     <ul class="dropdown-menu"> 
-                        <li>
-                            <a href="{{ url('admin/changepassword') }}"><i class="lnr lnr-cog"></i> <span>Change Password</span></a>
-                        </li>                        
+                        <li><a href="{{ url('admin/changepassword') }}"><i class="lnr lnr-cog"></i> <span>Change Password</span></a></li>                        
                         <!-- Logout Button -->
                         <li>
                             <a class="dropdown-item" href="{{ url('/admin/logout') }}"

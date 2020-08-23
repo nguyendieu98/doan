@@ -42,6 +42,10 @@ class ProductController extends Controller
         if ($request->name) {
             $products = $products->where('name','like','%'.$request->name.'%'); 
         } 
+        if ($request->category) {
+            $category_id = Category::select('id')->where('name',$request->category)->first();
+            $products = $products->where('category_id',$category_id->id); 
+        }
         $products = $products->paginate(10)->appends(request()->query());
         return view('admin.product.index',compact('products','categories'));
     }
@@ -97,6 +101,7 @@ class ProductController extends Controller
                     'color' => $color,
                     'isdelete' => false,
                     'isdisplay' => false,
+                    'created_by' => Auth::guard('admin')->user()->id,
                     'updated_at' => null
                 ]);
                 $product_detail->save();
@@ -286,5 +291,11 @@ class ProductController extends Controller
             $image->delete();
             return response($request->id);
         }
+    }
+    public function sale(Request $request)
+    {
+        $products = Product::orderBy('created_at', 'desc')->where('isdelete',false)->where('promotion','>',0);
+        $products = $products->paginate(10)->appends(request()->query());
+        return view('admin.product.sale',compact('products'));
     }
 }

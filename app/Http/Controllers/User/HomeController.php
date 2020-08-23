@@ -13,6 +13,7 @@ use App\Models\Product_Detail;
 use App\Models\About;
 use App\Models\Slide;
 use App\Models\Comment;
+use App\Models\Banner;
 use Session;
 use Validator;
 use Illuminate\Support\Str; 
@@ -38,6 +39,7 @@ class HomeController extends Controller
     {
         $products = Product::where('products.isdelete',false)->where('products.isdisplay',true);
         $abouts = About::take(1)->get(); 
+        $banners = Banner::where('isdelete',false)->where('isdisplay',true)->orderBy('created_at','desc')->take(4)->get();
         $categories = Category::where('isdelete',false)->where('isdisplay',true)->get();
         //Get list color 
         $colors = Product_Detail::select('color')->where('isdelete',false)->get();
@@ -104,9 +106,20 @@ class HomeController extends Controller
         }
         $products = $products->paginate(12)->appends(request()->query());
         $star = Comment::select('star','product_id')->where('isdisplay',true)->where('isdelete',false)->get();
-        return view('user.home.product',compact('products','abouts','categories','listquantity','listcolorquantity','star'));
+        return view('user.home.product',compact('products','abouts','categories','listquantity','listcolorquantity','star','banners'));
     }
-
+    public function product_sale(Request $request)
+    {
+        $products = Product::where('products.isdelete',false)->where('products.isdisplay',true)->where('products.promotion','>',0)->get();
+        $abouts = About::take(1)->get();
+        //Top rating
+        $list_product_vote_id = $this->topVote();
+        $list_product_votes = array();
+        foreach ($list_product_vote_id as $key => $value) { 
+            $list_product_votes[] = Product::where('isdelete',false)->where('isdisplay',true)->where('id',$key)->get()->toArray();
+        }  
+        return view('user.home.product_sale',compact('products','abouts','list_product_votes','list_product_vote_id'));
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -138,6 +151,7 @@ class HomeController extends Controller
     {
         $categories = Category::where('isdelete','0')->get(); 
         $product = Product::where('slug',$slug)->first();
+        $banners = Banner::where('isdelete',false)->where('isdisplay',true)->orderBy('created_at','desc')->take(4)->get();
         $productbycategories = Product::where('category_id',$product->category_id)->where('id','<>',$product->id)->orderBy('created_at','desc')->take(10)->get();
         $colors = DB::table('product_details')->where('product_id',$product->id)->get();
         $sizes = DB::table('product_details')->where('product_id',$product->id)->get();
@@ -155,7 +169,7 @@ class HomeController extends Controller
         foreach ($list_product_vote_id as $key => $value) { 
             $list_product_votes[] = Product::where('isdelete',false)->where('isdisplay',true)->where('id',$key)->get()->toArray();
         }  
-        return view('user.home.productdetail',compact('product','categories','abouts','colors','sizes','quantity','images','productbycategories','comments','list_product_votes','list_product_vote_id'));
+        return view('user.home.productdetail',compact('product','categories','abouts','colors','sizes','quantity','images','productbycategories','comments','list_product_votes','list_product_vote_id','banners'));
     }
 
     /**
@@ -195,18 +209,19 @@ class HomeController extends Controller
     public function homepage()
     {
         $abouts = About::take(1)->get();
-        $newproducts = Product::where('isdelete',false)->where('isdisplay',true)->orderBy('created_at','desc')->take(10)->get();
+        $newproducts = Product::where('isdelete',false)->where('isdisplay',true)->orderBy('created_at','desc')->take(8)->get();
         $categories = Category::where('isdelete','0')->where('isdisplay','1')->get(); 
+        $banners = Banner::where('isdelete',false)->where('isdisplay',true)->orderBy('created_at','desc')->take(4)->get();
         $listquatity = array();
-        $product_promotions = Product::where('promotion','<>','')->where('isdelete','0')->where('isdisplay','1')->orderBy('created_at','desc')->get(); 
-        $slides = Slide::where('isdelete','0')->where('isdisplay','1')->get(); 
+        $product_promotions = Product::where('promotion','<>','')->where('isdelete','0')->where('isdisplay','1')->orderBy('created_at','desc')->take(8)->get(); 
+        $slides = Slide::where('isdelete',false)->where('isdisplay',true)->get(); 
         //Top rating
         $list_product_vote_id = $this->topVote();
         $list_product_votes = array();
         foreach ($list_product_vote_id as $key => $value) { 
             $list_product_votes[] = Product::where('isdelete',false)->where('isdisplay',true)->where('id',$key)->get()->toArray();
         }  
-        return view('user.home.home',compact('abouts','product_promotions','categories','slides','newproducts','list_product_votes','list_product_vote_id'));
+        return view('user.home.home',compact('abouts','product_promotions','categories','slides','newproducts','list_product_votes','list_product_vote_id','banners'));
     }
     public function countProduct($id)
     {
@@ -253,9 +268,7 @@ class HomeController extends Controller
             'email'   => 'required',
             'message'   => 'required'
         ]);
-
         $email = $request->email;
-
         $data = array(
             'name' => $request->name,
             'email' => $request->email,
@@ -270,7 +283,6 @@ class HomeController extends Controller
             $message->subject("Contact from customer");
         });
         Session::flash('message', 'Send message successfully!');
-
         return redirect('/contact');
     }
     // End Contact us

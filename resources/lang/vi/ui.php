@@ -1,0 +1,22 @@
+<?php 
+return[ 
+  'customblock'=>'Chính Sách',
+  'aboutus'=>'Về chúng tôi',
+  'privacypolicy'=>'Chính sách bảo mật',
+  'terms'=>'Điều khoản',
+  'bestseller'=>'Người Bán Hàng ',
+  'manufactures'=>'Sản Xuất',
+  'deliveryinfomation'=>'Thông tin giao hàng',
+  'privacypolicy'=>'Chính sách bảo mật',
+  'seacrh'=>'Tìm kiếm',
+  'order'=>'Đặt hàng và trả hàng',
+  'infomation'=>'Thông Tin',
+  'open'=>'Thời Gian Mở Cửa',
+  'monday'=>'Thứ hai đến thứ sáu',
+  'saturday'=>'Thứ 7',
+  'sunday'=>'Chủ Nhật',
+  'phone'=>'Phone',
+  'title'=>'Tiêu Đề',
+  'PleaseselectSizeandColor'=>'Vui lòng chọn size và màu!',
+  'quantity'=>'Số lượng phải lớn hơn',
+];

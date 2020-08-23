@@ -11,6 +11,7 @@ use App\Models\Store;
 use App\Models\Order;
 use App\Models\Order_detail;
 use Carbon\Carbon;
+use App\User;
 use Auth;
 use App\Http\Requests\PlaceorderRequest;
 
@@ -40,6 +41,11 @@ class CartController extends Controller
         if(!$product) {
             abort(404);
         }
+        if ($product->promotion) {
+            $price = $product->price - $product->price * $product->promotion/100;
+        }else{
+            $price = $product->price;
+        }
         $cart = session()->get('cart');
         // if cart is empty then this the first product
         if(!$cart) {
@@ -49,7 +55,7 @@ class CartController extends Controller
                     "name" => $product->name,
                     "slug" => $product->slug,
                     "quantity" => $request->quantity,
-                    "price" => $product->price,
+                    "price" => $price,
                     "image" => $product->image,
                     "size" => $request->size,
                     "color" => $request->color
@@ -74,7 +80,7 @@ class CartController extends Controller
             "name" => $product->name,
             "slug" => $product->slug,
             "quantity" => $request->quantity,
-            "price" => $product->price,
+            "price" => $price,
             "image" => $product->image,
             "size" => $request->size,
             "color" => $request->color
@@ -115,6 +121,25 @@ class CartController extends Controller
     }
     public function placeorder(Request $request)
     { 
+        $isquantity = true;
+        foreach ($request->product_detail_id as $key => $value) {
+            if (!$this->checkQuantity($value,$request->quantity[$key])) {
+                $cart = session()->get('cart');
+                unset($cart[$value]);
+                session()->put('cart', $cart);
+                $isquantity = false;
+            }
+        }
+        if (!$isquantity) {
+            return redirect('/cart')->with('err', 'Product quantity not enough!');  
+        }
+        $user = Auth::guard('client')->user();
+        $userinfo = User::findOrFail($user->id);
+        $userinfo->first_name = $request->first_name;
+        $userinfo->last_name = $request->last_name;
+        $userinfo->address = $request->address;
+        $userinfo->phone = $request->phone;
+        $userinfo->update();
         $status = 'unconfimred';
         if ($request->payment != 'cod') {
             $status = 'cancel';
@@ -146,10 +171,7 @@ class CartController extends Controller
             if ($status == 'unconfimred') {
                 $this->updateStore($order_detail->product_detail_id,$order_detail->quantity);
             }
-        }  
-        // $user = Auth::guard('client')->user();
-        // if ($request->first_name != $user->first_name || $request->last_name != $user->last_name || $request->address != $user->address || $request->email != $user->email || $request->phone != $user->phone) {
-        // } 
+        }    
         //VNPAY
         if ($request->payment == 'vnpay') { 
             $vnp_TmnCode = "2HULBQDO"; //Mã website tại VNPAY 
@@ -290,5 +312,13 @@ class CartController extends Controller
         $store = Store::where('productdetail_id',$product_detail_id)->first();  
         $store->quantity -= $quantity;
         $store->update();       
-   }   
+   } 
+   public function checkQuantity($product_detail_id,$quantity)
+    {
+        $store = Store::where('productdetail_id',$product_detail_id)->first(); 
+        if ($store->quantity < $quantity) {
+            return false;
+        }
+        return true;
+    }  
 }

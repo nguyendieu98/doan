@@ -15,6 +15,7 @@
 		<div class="form-group col-md-6">
 			{{ Form::label('name','Name : ')}}
 			{{ Form::text('name',$category->name,['class'=>'form-control col-md-8'])}}
+			<br>
 			<span class="text-danger">{{ $errors->first('name')}}</span>
 		</div>
 		<div class="form-group col-md-6">

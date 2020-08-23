@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BrandRequest extends FormRequest
 {
@@ -26,13 +27,24 @@ class BrandRequest extends FormRequest
     {
         if ($this->method()=='PUT') {
             return [
-                'name'=>'required|max:255|unique:brands,name,'.$request->get('id'),
+                'name'=>[
+                    'required',
+                    'max:255',
+                    Rule::unique('brands')->where(function ($query) use($request) {
+                        $query->where('isdelete', 0)->where('id','<>',$request->get('id'));
+                    }),
+                ], 
                 'description' => 'required|max:500'
             ];
         }else{
-            return [
-                'name' => 'required|max:255',
-                'name'=>'required|unique:brands,name,'.$this->id,
+            return [ 
+                'name'=> [
+                    'required',
+                    'max:255',
+                    Rule::unique('brands')->where(function ($query) {
+                        $query->where('isdelete', 0);
+                    }),
+                ],
                 'description' => 'required|max:500'
             ];
         } 
@@ -40,11 +52,11 @@ class BrandRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required'=>'Please enter a brand name.',
-            'name.unique' => 'Brand name already exists.',
-            'name.max'=>'Maximum length is 255 characters.',
-            'description.required'=>'Please enter a description.',
-            'description.max'=>'Maximum length is 500 characters.'
+            'name.required'=>'Brand name must not be blank!',
+            'name.unique' => 'Brand Name already exists!',
+            'name.max'=>'Brand name maximum length is 255 characters!',
+            'description.required'=>'Description must not be blank!',
+            'description.max'=>'Description maximum length is 500 characters!'
         ];
     }
 }

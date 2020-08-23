@@ -1,5 +1,5 @@
 @extends('user.layout.main')
-@section('title','Orderdetail')
+@section('title',__('cart.orderdetail'))
 @section('content')
 <style>
 	/* Rating Star Widgets Style */ 
@@ -32,7 +32,7 @@
 		<div class="row">
 			<div class="col-lg-12 col-md-12 col-sm-12">	
 				<div class="breadcrumb-row">
-					<h3 class="breadcrumb"><a href="/" class="home">Home</a><span>/</span><a href="{{url('/profile')}}" class="home">Profle</a><span>/</span>Order Detail</h3>
+					<h3 class="breadcrumb"><a href="/" class="home">{{__('client.Home')}}</a><span>/</span><a href="{{url('/profile')}}" class="home">{{__('profileUser.order')}}</a><span>/</span>{{__('profileUser.orderDetail')}}</h3>
 				</div>
 			</div>
 		</div>
@@ -48,16 +48,16 @@
 			<div class="col-xs-7 col-md-7">
 				<div class="card-body">
 					<p><a href="{{route('products.show',$order_detail->product_detail->product->slug)}}">{{$order_detail->product_detail->product->name}} ({{$order_detail->product_detail->size}} {{$order_detail->product_detail->color}})</a></p>  
-					<p>Quantity: {{$order_detail->quantity}} </p>
-					<p>Price: {{$order_detail->product_detail->product->price}} </p>
+					<p>{{__('client.quantity')}}: {{$order_detail->quantity}} </p>
+					<p>{{__('cart.price')}}: {{number_format($order_detail->product_detail->product->price)}}đ </p>
 				</div>
 			</div> 
 			<div class="col-xs-3 col-md-3">
 				<p>{{strtoupper($order_detail->order->status)}}</p>   
-				<p> <span style="color: green; font-size: 20px;">{{$order_detail->quantity * $order_detail->product_detail->product->price}}đ</span></p> 
+				<p> <span style="color: green; font-size: 20px;">{{number_format($order_detail->quantity * $order_detail->product_detail->product->price)}}đ</span></p> 
 				@if(!$order_detail->isfeedback && $order->status == 'delivered')
 				<input type="hidden" class="product{{$order_detail->id}}" value="{{$order_detail->product_detail->product->id}}">
-				<button class="feedbackproduct btn btn-success col-md-5" data-toggle="modal" data-target="#feedback" value="{{$order_detail->id}}">Feedback</button> 
+				<button class="feedbackproduct btn btn-success col-md-5"  value="{{$order_detail->id}}">{{__('profileUser.feedback')}}</button> 
 				@endif 
 			</div>
 		</div>
@@ -68,20 +68,20 @@
 			<table class="table-responsive">
 				<tbody>
 					<tr class="cart-subtotal">
-						<th>Transaction date</th>
+						<th>{{__('cart.transactiondate')}}</th>
 						<td><span class="amount">{{$order_details[0]->order->transaction_date}}</span></td>
 					</tr>
 					<tr class="cart-subtotal">
-						<th>Subtotal</th>
-						<td><span class="amount">{{$order_details[0]->order->total_amount}}đ</span></td>
+						<th>{{__('cart.subtotal')}}</th>
+						<td><span class="amount">{{number_format($order_details[0]->order->total_amount)}}đ</span></td>
 					</tr>
 					<tr class="shipping">
-						<th>Shipping</th>
-						<td>Free Shipping</td>
+						<th>{{__('cart.Shipping')}}</th>
+						<td>{{__('cart.ship')}}</td>
 					</tr>
 					<tr class="order-total">
-						<th>Total</th>
-						<td><strong><span class="amount"> {{$order_details[0]->order->total_amount}}đ</span></strong> </td>
+						<th>{{__('cart.total')}}</th>
+						<td><strong><span class="amount"> {{number_format($order_details[0]->order->total_amount)}}đ</span></strong> </td>
 					</tr>
 				</tbody>
 			</table> 
@@ -92,12 +92,12 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h3 class="modal-title" id="exampleModalLabel">Feedback</h3>
+				<h3 class="modal-title" id="exampleModalLabel">{{__('profileUser.feedback')}}</h3>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -20px;">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form action="{{url('comment')}}" method="POST">
+			<form action="{{url('comment')}}" method="POST" onsubmit="return validate();">
 				@csrf
 				<div class="modal-body contentbody">
 					<div class="form-group row">
@@ -107,7 +107,7 @@
 						</div>
 						<div class="col-md-4">
 							<div class="rating-stars">
-								<h4>Star voting:</h4>
+								<h4>{{__('profileUser.vote')}}:</h4>
 								<ul id="stars" style="font-size: 25px;">
 									<li class="star" title="Poor" data-value="1" id="1">
 										<i class="fa fa-star fa-fw"></i>
@@ -124,21 +124,24 @@
 										<i class="fa fa-star fa-fw"></i>
 									</li>
 								</ul>
+								<p class="text-danger starerr"></p>
 								<input type="hidden" class="starvalue" name="star">
 							</div> 
 						</div>
 						<div class="col-md-6">
-							<h4>Comment:</h4>
+							<h4>{{__('profileUser.comment')}}:</h4>
 							<textarea  cols="60" rows="10" class="comment" name="comment"></textarea>
+							<p class="text-danger cmterr"></p>
 						</div>
 					</div>
 				</div> 
 				<div class="modal-footer"> 
-					<button type="submit" class="btn btn-success">Save changes</button>
+					<button type="submit" class="btn btn-success">{{__('profileUser.feedback')}}</button>
 				</div>
 			</form>
 		</div>
-	</div>
+	</div> 
+</div>	
 	@foreach($abouts as $key => $about)
 	<input type="hidden" value="{{$about->title}}" id="titlevalue">
 	<input type="hidden" value="{{$about->name}}" id="namevalue">
@@ -148,12 +151,14 @@
 	<input type="hidden" value="{{asset('images/'.$about->logo)}}" id="logovalue">
 	@endforeach
 	<script src="{{asset('client/js/setabout.js')}}"></script>
-	<script>
+	<script> 
 		$('.feedbackproduct').click(function(){
 			$('.star').removeClass('selected');
 			$('.comment').val(''); 
 			$("#product_id").val($(".product"+$(this).val()).val());
 			$("#order_detail_id").val($(this).val());
+			$('#feedback').modal('show');
+			$("#bodycontent").css({"padding-right": "0px" }); 
 		});
 		$(document).ready(function(){
 			/* 1. Visualizing things on Hover - See next part for action on click */
@@ -186,5 +191,19 @@
 	    	$(".starvalue").val($(this).data('value'));
 	    }); 
     }); 
+		function validate() {
+			var star = $(".starvalue").val();
+			var comment = $(".comment").val();
+			var result = true;
+			if (!star) {
+				result = false;
+				$(".starerr").html("{{trans('profileUser.starerr')}}");
+			}
+			if (!comment) {
+				result = false;
+				$(".cmterr").html("{{trans('profileUser.cmterr')}}");
+			}
+			return result;
+		}
 </script>
 @endsection
